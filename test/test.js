@@ -51,6 +51,30 @@ describe('Notify', function() {
     });
 });
 
+describe('Health Check', function() {
+    it('/', function(done) {
+        this.timeout(5000);
+
+        tools.api.healthcheck()
+        .then((result) => {
+            try {
+                result.should.have.property('uptime');
+                result.should.have.property('memory');
+                result.should.have.property('database');
+                done();
+            } catch(e) {
+                done(e);
+            };
+        }, (err) => {
+            try {
+                done(err);
+            } catch(e) {
+                done(e);
+            };
+        });
+    });
+});
+
 var tools = {
     api: {
         notify: {
@@ -124,14 +148,50 @@ var tools = {
 
                 return deferred.promise;
             }
+        },
+        healthcheck: async () => {
+            var deferred = Q.defer();
+            
+            const response = await tools.put('/health-check', {});
+
+            deferred.resolve(response);
+
+            return deferred.promise;
         }
+    },
+    put: async (url, payload) => {
+        var deferred = Q.defer();
+
+        payload.header = {
+            'email': config.email, 
+            'appId': config.appId
+        };
+
+        payload = JSON.stringify(payload);
+
+        const response = await fetch(config.api + url, {
+            'headers': {
+                'Accept':           '*/*',
+                'Content-Type':     'application/json; charset=utf-8',
+                'Authorization':    JSON.stringify(config.token),
+                'Content-Length':   payload.length
+            },
+            'body':   payload,
+            'method': 'PUT'
+        });
+        
+        const result = await response.json();
+
+        deferred.resolve(result);
+        
+        return deferred.promise;
     },
     post: async (url, payload) => {
         var deferred = Q.defer();
 
         payload.header = {
-            'email':           config.email, 
-            'appId':    config.appId
+            'email': config.email, 
+            'appId': config.appId
         };
 
         payload = JSON.stringify(payload);

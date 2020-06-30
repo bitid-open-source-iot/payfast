@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Start Payfast",
+            "name": "Start Service",
             "skipFiles": [
                 "<node_internals>/**"
             ],

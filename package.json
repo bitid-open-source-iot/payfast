@@ -7,10 +7,12 @@
     "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "dependencies": {
+    "@bitid/health-check": "^1.0.1",
     "@payfast/core": "^0.1.8",
     "chalk": "^4.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "log4js": "^6.3.0",
     "node-fetch": "^2.6.0",
     "q": "^1.5.1"
   },
