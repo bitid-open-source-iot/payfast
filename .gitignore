@@ -1,4 +1,4 @@
 logs/
 config.json
 node_modules/
-packager-lock.json
+package-lock.json
