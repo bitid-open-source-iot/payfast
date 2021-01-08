@@ -11,7 +11,7 @@ var module = function() {
                     "code":         1,
                     "reason":       "General Payfast Error",
                     "message":      "Payfast Error",
-                    "locaction":    "bllNotify",
+                    "location":    "bllNotify",
                     "locationType": "body"
                 }]
             },

@@ -21,7 +21,7 @@ try {
                 "errors":[{
                     "reason":       "Portal Error",
                     "message":      "Portal Error",
-                    "locaction":    "portal",
+                    "location":    "portal",
                     "locationType": "portal"
                 }]
             },
