@@ -1,39 +1,39 @@
 {
     "production": false,
     "orders": {
-        "host":     "http://127.0.0.1",
-        "email":    "xxx@xxx.co.za",
-        "token":    {},
-        "appId":    "xxx"
+        "host": "http://127.0.0.1",
+        "email": "xxx@xxx.co.za",
+        "token": {},
+        "appId": "xxx"
     },
     "invoices": {
-        "host":     "http://127.0.0.1",
-        "email":    "xxx@xxx.co.za",
-        "token":    {},
-        "appId":    "xxx"
+        "host": "http://127.0.0.1",
+        "email": "xxx@xxx.co.za",
+        "token": {},
+        "appId": "xxx"
     },
     "subscriptions": {
-        "host":     "http://127.0.0.1",
-        "email":    "xxx@xxx.co.za",
-        "token":    {},
-        "appId":    "xxx"
+        "host": "http://127.0.0.1",
+        "email": "xxx@xxx.co.za",
+        "token": {},
+        "appId": "xxx"
     },
     "localwebserver": {
         "port": 1920
     },
     "payfast": {
-        "version":      "xxx",
-        "passphrase":   "xxx",
-        "merchantId":   "xxx"
+        "version": "xxx",
+        "passphrase": "xxx",
+        "merchantId": "xxx"
     },
     "logger": {
         "appenders": {
             "payfast": {
-                "type":         "file",
-                "backups":      10,
-                "filename":     "./logs/payfast.log",
-                "absolute":     true,
-                "maxLogSize":   102400
+                "type": "file",
+                "backups": 10,
+                "filename": "./logs/payfast.log",
+                "absolute": true,
+                "maxLogSize": 102400
             }
         },
         "categories": {
