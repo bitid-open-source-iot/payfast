@@ -13,7 +13,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "log4js": "^6.3.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "q": "^1.5.1"
   },
   "nodemonConfig": {
