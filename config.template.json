@@ -25,24 +25,5 @@
         "version": "xxx",
         "passphrase": "xxx",
         "merchantId": "xxx"
-    },
-    "logger": {
-        "appenders": {
-            "payfast": {
-                "type": "file",
-                "backups": 10,
-                "filename": "./logs/payfast.log",
-                "absolute": true,
-                "maxLogSize": 102400
-            }
-        },
-        "categories": {
-            "default": {
-                "appenders": [
-                    "payfast"
-                ],
-                "level": "error"
-            }
-        }
     }
 }
