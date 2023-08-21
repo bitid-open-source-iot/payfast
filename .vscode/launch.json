@@ -19,6 +19,16 @@
             "request": "launch",
             "preLaunchTask": "docker-run: debug",
             "platform": "node"
-        }
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Kubernetes",
+            "address": "localhost",
+            "port": 9229,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/usr/src/app"
+        },
+
     ]
 }
