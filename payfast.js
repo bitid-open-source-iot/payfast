@@ -42,6 +42,9 @@ try {
                     "limit": '50mb'
                 }));
 
+                app.use('/kubernetes', require('./api/kubernetes'));
+                console.log('Loaded ./api/kubernetes');
+
                 var notify = require('./api/notify');
                 app.use('/api/notify', notify);
                 __logger.info('Loaded: ./api/notify')
