@@ -282,7 +282,7 @@ var module = function () {
                     'appId': __settings.subscriptions.appId
                 };
 
-                const url = [__settings.subscriptions.host, '/api/payfast/billed'].join('');
+                const url = [__settings.subscriptions.host, '/api/payfast/payment'].join('');
                 const payload = JSON.stringify(args.req.body);
                 const response = await fetch(url, {
                     'headers': {
