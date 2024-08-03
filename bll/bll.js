@@ -1,27 +1,14 @@
 var fetch = require('node-fetch');
+const tools = require('../lib/tools');
 var payfast = require('@payfast/core');
 
 var module = function () {
     var bllNotify = {
-        errorResponse: {
-            'error': {
-                'code': 401,
-                'message': 'BLL Payfast Error',
-                'errors': [{
-                    'code': 1,
-                    'reason': 'General Payfast Error',
-                    'message': 'Payfast Error',
-                    'location': 'bllNotify',
-                    'locationType': 'body'
-                }]
-            },
-            'hiddenErrors': []
-        },
 
         itn: async (req, res) => {
             const sender = await payfast.validate.sender(req.headers.referer);
             if (!sender.valid && __settings.production) {
-                var err = bllNotify.errorResponse;
+                let err = tools.log('error', 'Payfast sender is invalid!', { reqBody: req?.body, reqAuthorization: req?.authorization });
                 err.error.errors[0].code = 401;
                 err.error.errors[0].reason = 'Payfast sender is invalid!';
                 err.error.errors[0].message = 'Payfast sender is invalid!';
@@ -29,7 +16,7 @@ var module = function () {
             };
             const verify = await payfast.validate.request(req.body);
             if (!verify.valid && __settings.production) {
-                var err = bllNotify.errorResponse;
+                let err = tools.log('error', 'Payfast validate is invalid!', { reqBody: req?.body, reqAuthorization: req?.authorization });
                 err.error.errors[0].code = 401;
                 err.error.errors[0].reason = 'Payfast request is invalid!';
                 err.error.errors[0].message = 'Payfast request is invalid!';
@@ -59,7 +46,7 @@ var module = function () {
                         subscriptions.cancel(args);
                     };
                 } else {
-                    var err = bllNotify.errorResponse;
+                    let err = tools.log('error', 'Payfast payment_status not found!', { reqBody: req?.body, reqAuthorization: req?.authorization });
                     err.error.errors[0].code = 69;
                     err.error.errors[0].reason = 'Payfast payment_status not found!';
                     err.error.errors[0].message = 'Payfast payment_status not found!';
@@ -71,7 +58,7 @@ var module = function () {
         recurring: async (req, res) => {
             const sender = await payfast.validate.sender(req.headers.referer);
             if (!sender.valid && __settings.production) {
-                var err = bllNotify.errorResponse;
+                let err = tools.log('error', 'Payfast recurring.sender is invalid!', { reqBody: req?.body, reqAuthorization: req?.authorization });
                 err.error.errors[0].code = 401;
                 err.error.errors[0].reason = 'Payfast sender is invalid!';
                 err.error.errors[0].message = 'Payfast sender is invalid!';
@@ -85,7 +72,7 @@ var module = function () {
                 'pf_payment_id': req.body.pf_payment_id
             });
             if (!verify.valid && __settings.production) {
-                var err = bllNotify.errorResponse;
+                let err = tools.log('error', 'Payfast recurring.validate is invalid!', { reqBody: req?.body, reqAuthorization: req?.authorization });
                 err.error.errors[0].code = 401;
                 err.error.errors[0].reason = 'Payfast request is invalid!';
                 err.error.errors[0].message = 'Payfast request is invalid!';
@@ -129,6 +116,7 @@ var module = function () {
             const result = await response.json();
 
             if (typeof (result.errors) != 'undefined') {
+                tools.log('error', `Error in orders.cancel ${url} result`, result, { reqBody: req?.body, reqAuthorization: req?.authorization });
                 __responder.error(args.req, args.res, { 'error': result });
             } else {
                 __responder.success(args.req, args.res, result);
@@ -156,6 +144,7 @@ var module = function () {
             const result = await response.json();
 
             if (typeof (result.errors) != 'undefined') {
+                tools.log('error', `Error in orders.process ${url} result`, result, { reqBody: req?.body, reqAuthorization: req?.authorization });
                 __responder.error(args.req, args.res, { 'error': result });
             } else {
                 __responder.success(args.req, args.res, result);
@@ -186,6 +175,7 @@ var module = function () {
             const result = await response.json();
 
             if (typeof (result.errors) != 'undefined') {
+                tools.log('error', `Error in invoices.cancel ${url} result`, result, { reqBody: req?.body, reqAuthorization: req?.authorization });
                 __responder.error(args.req, args.res, { 'error': result });
             } else {
                 __responder.success(args.req, args.res, result);
@@ -213,6 +203,7 @@ var module = function () {
             const result = await response.json();
 
             if (typeof (result.errors) != 'undefined') {
+                tools.log('error', `Error in invoices.process ${url} result`, result, { reqBody: req?.body, reqAuthorization: req?.authorization });
                 __responder.error(args.req, args.res, { 'error': result });
             } else {
                 __responder.success(args.req, args.res, result);
@@ -243,6 +234,7 @@ var module = function () {
             const result = await response.json();
 
             if (typeof (result.errors) != 'undefined') {
+                tools.log('error', `Error in subscriptions.cancel ${url} result`, result, { reqBody: req?.body, reqAuthorization: req?.authorization });
                 __responder.error(args.req, args.res, { 'error': result });
             } else {
                 __responder.success(args.req, args.res, result);
@@ -270,6 +262,7 @@ var module = function () {
             const result = await response.json();
 
             if (typeof (result.errors) != 'undefined') {
+                tools.log('error', `Error in subscriptions.process ${url} result`, result, { reqBody: req?.body, reqAuthorization: req?.authorization });
                 __responder.error(args.req, args.res, { 'error': result });
             } else {
                 __responder.success(args.req, args.res, result);
@@ -298,7 +291,7 @@ var module = function () {
                 const result = await response.json();
 
                 if (typeof (result.errors) != 'undefined') {
-                    __logger.error('Payfast Recurring Error - ' + JSON.stringify(args.req.body) + ' - ' + JSON.stringify(result.errors))
+                    tools.log('error', `Error in subscriptions.recurring ${url} result`, result, { reqBody: req?.body, reqAuthorization: req?.authorization });
                     __responder.error(args.req, args.res, { 'error': result });
                 } else {
                     __responder.success(args.req, args.res, result);

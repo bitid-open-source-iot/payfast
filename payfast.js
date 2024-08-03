@@ -3,8 +3,9 @@ var cors        = require('cors');
 var http        = require('http');
 var chalk       = require('chalk');
 var express     = require('express');
-var responder   = require('./lib/responder');
+const tools     = require('./lib/tools');
 var bodyParser  = require('body-parser');
+var responder   = require('./lib/responder');
 var healthcheck = require('@bitid/health-check');
 
 global.__base       = __dirname + '/';
@@ -14,19 +15,6 @@ global.__responder  = new responder.module();
 
 try {
     var portal = {
-        errorResponse: {
-            "error": {
-                "code":     401,
-                "message":  "Invalid Credentials",
-                "errors":[{
-                    "reason":       "Portal Error",
-                    "message":      "Portal Error",
-                    "location":    "portal",
-                    "locationType": "portal"
-                }]
-            },
-            "hiddenErrors":[]
-        },
 
         api: (args) => {
             var deferred = Q.defer();
@@ -43,28 +31,30 @@ try {
                 }));
 
                 app.use('/kubernetes', require('./api/kubernetes'));
-                console.log('Loaded ./api/kubernetes');
+                tools.log('info','Loaded ./api/kubernetes',{});
 
                 var notify = require('./api/notify');
                 app.use('/api/notify', notify);
-                __logger.info('Loaded: ./api/notify')
+                tools.log('info','Loaded ./api/notify',{});
 
                 app.use('/health-check', healthcheck);
-                __logger.info('Loaded: ./health-check')
+                tools.log('info','Loaded ./health-check',{});
 
                 app.use((err, req, res, next) => {
-                    portal.errorResponse.error.code              = 500;
-                    portal.errorResponse.error.message           = 'Something broke';
-                    portal.errorResponse.error.errors[0].code    = 500;
-                    portal.errorResponse.error.errors[0].message = 'Something broke';
-                    portal.errorResponse.hiddenErrors.push(err.stack);
-                    __responder.error(req, res, portal.errorResponse);
+                    let err = tools.log('error','Error in API app.use', err, req)
+                    err.error.code              = 500;
+                    err.error.message           = 'Something broke';
+                    err.error.errors[0].code    = 500;
+                    err.error.errors[0].message = 'Something broke';
+                    err.hiddenErrors.push(err.stack);
+                    __responder.error(req, res, err);
                 });
 
                 var server = http.createServer(app);
                 server.listen(args.settings.localwebserver.port);
                 deferred.resolve(args);
             } catch(err) {
+                tools.log('error','Error in API', err, args);
                 deferred.reject(err.message);
             };
             
@@ -93,8 +83,9 @@ try {
             portal.logger(args)
             .then(portal.api, null)
             .then(args => {
-                console.log('Webserver Running on port: ', args.settings.localwebserver.port);
+                tools.log('info','Webserver Running on port', args.settings.localwebserver.port);
             }, err => {
+                tools.log('error','Error Initializing', err);
                 console.log('Error Initializing: ', err);
             });
         },
@@ -113,5 +104,5 @@ try {
         'settings': __settings
     });
 } catch(error) {
-    console.log('The following error has occurred: ', error.message);
+    tools.log('error','Error in payfast.js', error)
 };
