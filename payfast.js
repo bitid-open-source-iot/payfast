@@ -9,7 +9,6 @@ var responder   = require('./lib/responder');
 var healthcheck = require('@bitid/health-check');
 
 global.__base       = __dirname + '/';
-global.__logger     = require('./lib/logger');
 global.__settings   = require('./config.json');
 global.__responder  = new responder.module();
 
@@ -40,13 +39,13 @@ try {
                 app.use('/health-check', healthcheck);
                 tools.log('info','Loaded ./health-check',{});
 
-                app.use((err, req, res, next) => {
-                    let err = tools.log('error','Error in API app.use', err, req)
+                app.use((error, req, res, next) => {
+                    let err = tools.log('error','Error in API app.use', error, req)
                     err.error.code              = 500;
                     err.error.message           = 'Something broke';
                     err.error.errors[0].code    = 500;
                     err.error.errors[0].message = 'Something broke';
-                    err.hiddenErrors.push(err.stack);
+                    err.hiddenErrors.push(error.stack);
                     __responder.error(req, res, err);
                 });
 
@@ -80,8 +79,7 @@ try {
                 console.log('');
             };
 
-            portal.logger(args)
-            .then(portal.api, null)
+            portal.api(args)
             .then(args => {
                 tools.log('info','Webserver Running on port', args.settings.localwebserver.port);
             }, err => {
@@ -90,14 +88,6 @@ try {
             });
         },
 
-        logger: (args) => {
-            var deferred = Q.defer();
-
-            __logger.init();
-            deferred.resolve(args);
-            
-            return deferred.promise;
-        }
     };
 
     portal.init({

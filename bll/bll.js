@@ -297,7 +297,7 @@ var module = function () {
                     __responder.success(args.req, args.res, result);
                 };
             } catch (error) {
-                __logger.error('Payfast Recurring Error - ' + JSON.stringify(args.req.body) + ' - ' + error.message)
+                tools.log('error', 'Error in subscriptions.recurring', error, { reqBody: req?.body, reqAuthorization: req?.authorization });
             }
         }
     };
