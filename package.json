@@ -1,10 +1,13 @@
 {
   "name": "payfast",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "",
   "main": "payfast.js",
+  "engines": {
+    "node": ">=24.22.1"
+  },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/mocha --reporter spec --exit"
   },
   "dependencies": {
     "@bitid/health-check": "^1.0.1",
@@ -23,6 +26,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "chai-subset": "^1.6.0"
+    "chai-subset": "^1.6.0",
+    "mocha": "^10.8.2"
   }
 }
